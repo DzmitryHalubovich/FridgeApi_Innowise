@@ -7,6 +7,7 @@ namespace FridgeApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddControllers();
             // Add services to the container.
             builder.Services.AddAuthorization();
 
@@ -95,6 +96,9 @@ namespace FridgeApi
                 persons.Add(person);
                 return persons;
             });
+
+
+            app.MapControllers();
 
             app.Run();
         }
