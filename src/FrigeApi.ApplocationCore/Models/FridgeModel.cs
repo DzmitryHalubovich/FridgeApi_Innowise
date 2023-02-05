@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FrigeApi.DataLayer.Models
+namespace FrigeApi.ApplocationCore.Models
 {
-    public sealed class FridgeModel
+    public sealed class FridgeModel : BaseModel
     {
-        public int FridgeModelId { get; set; }
         public string Name { get; set; }
         public int? Year { get; set; }
     }

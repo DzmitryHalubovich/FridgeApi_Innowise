@@ -7,6 +7,8 @@ namespace FridgeApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            FrigeApi.Infrastructure.Dependencies.ConfigureServices(builder.Configuration, builder.Services);
+
             builder.Services.AddControllers();
             // Add services to the container.
             builder.Services.AddAuthorization();
