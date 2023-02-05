@@ -15,4 +15,8 @@
     <ProjectReference Include="..\FrigeApi.ApplocationCore\FrigeApi.ApplicationCore.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\Migrations\" />
+  </ItemGroup>
+
 </Project>

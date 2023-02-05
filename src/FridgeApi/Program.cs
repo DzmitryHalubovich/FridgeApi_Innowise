@@ -1,9 +1,12 @@
 
+using FrigeApi.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+
 namespace FridgeApi
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +21,24 @@ namespace FridgeApi
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var scopedProvider = scope.ServiceProvider;
+                try
+                {
+                    var fridgeContext = scopedProvider.GetRequiredService<FridgeDbContext>();
+                    if (fridgeContext.Database.IsSqlServer())
+                    {
+                        fridgeContext.Database.Migrate();
+                    }
+                    await SeedDataContext.SeedAsync(fridgeContext);
+                }
+                catch (Exception ex)
+                {
+                    app.Logger.LogError(ex, "An error occurred adding migrations to Databse.");
+                }
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

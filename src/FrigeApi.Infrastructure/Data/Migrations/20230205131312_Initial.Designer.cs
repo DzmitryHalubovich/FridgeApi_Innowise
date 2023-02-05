@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FrigeApi.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(FridgeDbContext))]
-    [Migration("20230205114202_InitialSchema")]
-    partial class InitialSchema
+    [Migration("20230205131312_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace FrigeApi.Infrastructure.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("FridgeProducts", b =>
+            modelBuilder.Entity("FridgeProduct", b =>
                 {
                     b.Property<int>("FridgesId")
                         .HasColumnType("int");
@@ -37,7 +37,7 @@ namespace FrigeApi.Infrastructure.Data.Migrations
 
                     b.HasIndex("ProductsId");
 
-                    b.ToTable("FridgeProducts");
+                    b.ToTable("FridgeProduct");
                 });
 
             modelBuilder.Entity("FrigeApi.ApplocationCore.Models.Fridge", b =>
@@ -62,7 +62,7 @@ namespace FrigeApi.Infrastructure.Data.Migrations
 
                     b.HasIndex("FridgeModelId");
 
-                    b.ToTable("Fridge");
+                    b.ToTable("Fridges");
                 });
 
             modelBuilder.Entity("FrigeApi.ApplocationCore.Models.FridgeModel", b =>
@@ -82,10 +82,10 @@ namespace FrigeApi.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FridgeModel");
+                    b.ToTable("FridgeModels");
                 });
 
-            modelBuilder.Entity("FrigeApi.ApplocationCore.Models.Products", b =>
+            modelBuilder.Entity("FrigeApi.ApplocationCore.Models.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -105,7 +105,7 @@ namespace FrigeApi.Infrastructure.Data.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("FridgeProducts", b =>
+            modelBuilder.Entity("FridgeProduct", b =>
                 {
                     b.HasOne("FrigeApi.ApplocationCore.Models.Fridge", null)
                         .WithMany()
@@ -113,7 +113,7 @@ namespace FrigeApi.Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FrigeApi.ApplocationCore.Models.Products", null)
+                    b.HasOne("FrigeApi.ApplocationCore.Models.Product", null)
                         .WithMany()
                         .HasForeignKey("ProductsId")
                         .OnDelete(DeleteBehavior.Cascade)

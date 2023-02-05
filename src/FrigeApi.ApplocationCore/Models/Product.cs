@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FrigeApi.ApplocationCore.Models
 {
-    public sealed class Products : BaseModel
+    public sealed class Product : BaseModel
     {
         public string Name { get; set; }
         public int? DefaultQuantity { get; set; }

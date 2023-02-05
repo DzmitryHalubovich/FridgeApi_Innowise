@@ -15,6 +15,6 @@ namespace FrigeApi.ApplocationCore.Models
 
         public int FridgeModelId { get; set; }
 
-        public List<Products> Products { get; set; }
+        public List<Product>? Products { get; set; }
     }
 }
