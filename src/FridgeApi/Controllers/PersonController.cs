@@ -19,5 +19,6 @@ namespace FridgeApi.Controllers
         {
             return Ok(persons);
         }
+
     }
 }

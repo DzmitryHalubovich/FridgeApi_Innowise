@@ -20,8 +20,8 @@ namespace FrigeApi.Infrastructure
         static FridgeModel fridgeModel1 = new FridgeModel() { Name = "Минск", Year = 1962 };
         static FridgeModel fridgeModel2 = new FridgeModel() { Name = "Брест", Year = 2006};
         static FridgeModel fridgeModel3 = new FridgeModel() { Name = "Орск", Year = 1960};
-        static FridgeModel fridgeModel4 = new FridgeModel() { Name = "Эврика   ", Year = 1970};
-        static FridgeModel fridgeModel5= new FridgeModel() { Name = "Ракета   ", Year = 1956};
+        static FridgeModel fridgeModel4 = new FridgeModel() { Name = "Эврика", Year = 1970};
+        static FridgeModel fridgeModel5= new FridgeModel() { Name = "Ракета", Year = 1956};
 
         static Product product1 = new Product
         {

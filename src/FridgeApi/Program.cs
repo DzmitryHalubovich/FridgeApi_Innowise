@@ -10,7 +10,7 @@ namespace FridgeApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            FrigeApi.Infrastructure.Dependencies.ConfigureServices(builder.Configuration, builder.Services);
+            Dependencies.ConfigureServices(builder.Configuration, builder.Services);
 
             builder.Services.AddControllers();
             // Add services to the container.
@@ -120,6 +120,8 @@ namespace FridgeApi
                 return persons;
             });
 
+            app.MapGet("/book/All", async(FridgeDbContext context) =>
+                await context.Fridges.Include(fm=>fm.FridgeModel).ToListAsync());
 
             app.MapControllers();
 
