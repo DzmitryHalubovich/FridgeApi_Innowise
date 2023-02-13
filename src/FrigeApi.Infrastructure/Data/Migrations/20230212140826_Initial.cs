@@ -83,10 +83,47 @@ namespace FrigeApi.Infrastructure.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "FridgeProducts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FridgeId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FridgeProducts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FridgeProducts_Fridges_FridgeId",
+                        column: x => x.FridgeId,
+                        principalTable: "Fridges",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FridgeProducts_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_FridgeProduct_ProductsId",
                 table: "FridgeProduct",
                 column: "ProductsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FridgeProducts_FridgeId",
+                table: "FridgeProducts",
+                column: "FridgeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FridgeProducts_ProductId",
+                table: "FridgeProducts",
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Fridges_FridgeModelId",
@@ -99,6 +136,9 @@ namespace FrigeApi.Infrastructure.Data.Migrations
         {
             migrationBuilder.DropTable(
                 name: "FridgeProduct");
+
+            migrationBuilder.DropTable(
+                name: "FridgeProducts");
 
             migrationBuilder.DropTable(
                 name: "Fridges");

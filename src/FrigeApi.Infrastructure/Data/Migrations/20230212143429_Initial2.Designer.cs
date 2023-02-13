@@ -4,6 +4,7 @@ using FridgeApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FrigeApi.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(FridgeDbContext))]
-    partial class FridgeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230212143429_Initial2")]
+    partial class Initial2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,22 +27,28 @@ namespace FrigeApi.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("FrigeApi.ApplicationCore.Models.FridgeProduct", b =>
                 {
-                    b.Property<int>("ProductId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("FridgeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Quantity")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(1);
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
 
-                    b.HasKey("ProductId", "FridgeId");
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("FridgeId");
 
-                    b.ToTable("FridgesProducts", (string)null);
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("FridgeProducts");
                 });
 
             modelBuilder.Entity("FrigeApi.ApplocationCore.Models.Fridge", b =>
@@ -110,13 +119,13 @@ namespace FrigeApi.Infrastructure.Data.Migrations
             modelBuilder.Entity("FrigeApi.ApplicationCore.Models.FridgeProduct", b =>
                 {
                     b.HasOne("FrigeApi.ApplocationCore.Models.Fridge", "Fridge")
-                        .WithMany("FridgeProducts")
+                        .WithMany("Products")
                         .HasForeignKey("FridgeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("FrigeApi.ApplocationCore.Models.Product", "Product")
-                        .WithMany("FridgeProducts")
+                        .WithMany("Fridges")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -139,12 +148,12 @@ namespace FrigeApi.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("FrigeApi.ApplocationCore.Models.Fridge", b =>
                 {
-                    b.Navigation("FridgeProducts");
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("FrigeApi.ApplocationCore.Models.Product", b =>
                 {
-                    b.Navigation("FridgeProducts");
+                    b.Navigation("Fridges");
                 });
 #pragma warning restore 612, 618
         }
