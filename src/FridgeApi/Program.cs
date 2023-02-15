@@ -61,7 +61,7 @@ namespace FridgeApi
             app.MapGet("/fridge/All", async(FridgeDbContext context) =>
                 await context.Fridges
                 .Include(model => model.FridgeModel)
-                .Include(model => model.Products)
+                .Include(model => model.FridgeProducts)
                 .ToListAsync());
 
             app.MapGet("/fridge/{id}", async (FridgeDbContext context, int id) =>

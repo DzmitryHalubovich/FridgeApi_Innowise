@@ -38,7 +38,7 @@ namespace FrigeApi.Infrastructure
 
             var fridges = new List<Fridge>
             {
-                new Fridge{Name = "Холодос", OwnerName = "Володя", FridgeModelId = 1, FridgeProducts = new FridgeProduct { Product =  } },
+                new Fridge{Name = "Холодос", OwnerName = "Володя", FridgeModelId = 1},
                 new Fridge{Name = "АйсАйсБейби", OwnerName = "Володя", FridgeModelId = 2},
                 new Fridge{Name = "Коробочка", OwnerName = "Володя", FridgeModelId = 3},
             };
@@ -63,12 +63,14 @@ namespace FrigeApi.Infrastructure
             if (!await fridgeContext.FridgeModels.AnyAsync())
             {
                 await fridgeContext.FridgeModels.AddRangeAsync(fridgeModels);
+                
                 await fridgeContext.SaveChangesAsync();
             }
 
             if (!await fridgeContext.Fridges.AnyAsync()) 
             {
                 await fridgeContext.Fridges.AddRangeAsync(fridges);
+
                 await fridgeContext.SaveChangesAsync();
             }
 
