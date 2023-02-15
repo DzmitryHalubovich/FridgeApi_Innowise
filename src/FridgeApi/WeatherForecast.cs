@@ -1,4 +1,4 @@
-namespace FridgeApi
+ namespace FridgeApi
 {
     public class WeatherForecast
     {

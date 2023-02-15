@@ -1,11 +1,17 @@
 
+using FrigeApi.ApplocationCore.Models;
+using FrigeApi.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+
 namespace FridgeApi
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            Dependencies.ConfigureServices(builder.Configuration, builder.Services);
 
             builder.Services.AddControllers();
             // Add services to the container.
@@ -16,6 +22,24 @@ namespace FridgeApi
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var scopedProvider = scope.ServiceProvider;
+                try
+                {
+                    var fridgeContext = scopedProvider.GetRequiredService<FridgeDbContext>();
+                    if (fridgeContext.Database.IsSqlServer())
+                    {
+                        fridgeContext.Database.Migrate();
+                    }
+                    await SeedDataContext.SeedAsync(fridgeContext);
+                }
+                catch (Exception ex)
+                {
+                    app.Logger.LogError(ex, "An error occurred adding migrations to Databse.");
+                }
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -33,83 +57,30 @@ namespace FridgeApi
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
             };
 
-            var persons = new List<Person> 
+            //»з контекста
+            app.MapGet("/fridge/All", async(FridgeDbContext context) =>
+                await context.Fridges
+                .Include(model => model.FridgeModel)
+                .Include(model => model.FridgeProducts)
+                .ToListAsync());
+
+            app.MapGet("/fridge/{id}", async (FridgeDbContext context, int id) =>
+                await context.Fridges.FindAsync(id) is Fridge fridge ?
+                    Results.Ok(fridge) :
+                    Results.NotFound("Sorry, fridge not found")) ;
+
+            app.MapPost("/fridge/Put", async (FridgeDbContext context, Fridge fridge) =>
             {
-                new Person { Id = 1, Name = "Max" },
-                new Person { Id = 2, Name = "Peter"},
-                new Person { Id = 3, Name = "Fred"},
-                new Person { Id = 4, Name = "Chester"}
-            };
-
-            app.MapGet("/weatherforecast", (HttpContext httpContext) =>
-            {
-                var forecast = Enumerable.Range(1, 5).Select(index =>
-                    new WeatherForecast
-                    {
-                        Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                        TemperatureC = Random.Shared.Next(-20, 55),
-                        Summary = summaries[Random.Shared.Next(summaries.Length)]
-                    })
-                    .ToArray();
-                return forecast;
-            })
-            .WithName("GetWeatherForecast")
-            .WithOpenApi();
-
-            app.MapGet("/persons", (HttpContext httpContext) =>
-            {
-                return persons;
-            })
-            .WithName("GetPersons")
-            .WithOpenApi();
-
-            app.MapPut("/persons/put", (Person userData) => {
-
-                // получаем пользовател€ по id
-                var user = persons.FirstOrDefault(u => u.Id == userData.Id);
-                // если не найден, отправл€ем статусный код и сообщение об ошибке
-                if (user == null) return Results.NotFound(new { message = "ѕользователь не найден" });
-                // если пользователь найден, измен€ем его данные и отправл€ем обратно клиенту
-
-                user.Id = userData.Id;
-                user.Name = userData.Name;
-                return Results.Json(user);
-            });
-
-            app.MapDelete("/person/delete", (int id) =>
-            {
-                Person person = persons.FirstOrDefault(u => u.Id == id);
-
-                if (person == null) return Results.NotFound(new { message = "ѕользователь не найден" });
-                persons.Remove(person);
-                return Results.Json(person);
-            });
-
-            app.MapGet("/person/Get", (int id) =>
-            {
-                Person person = persons.FirstOrDefault(u=>u.Id == id);
-                if (person == null) return Results.NotFound(new { message = "ѕользователь не найден" });
-                return Results.Json(person);
-            });
-
-            app.MapPost("/person/Put", (Person person) => {
-                persons.Add(person);
-                return persons;
-            });
-
+                context.Fridges.Add(fridge);
+                await context.SaveChangesAsync();
+                return Results.Ok(await context.Fridges.ToListAsync());
+            }) ;
 
             app.MapControllers();
 
             app.Run();
         }
-
-
-        
+    
     }
 
-     public class Person
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
 }
